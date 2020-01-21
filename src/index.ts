@@ -1,10 +1,9 @@
 import * as BABYLON from "babylonjs";
+import "babylonjs-loaders";
 
 window.addEventListener("DOMContentLoaded", function() {
   // get the canvas DOM element
-  const canvas: HTMLCanvasElement = <HTMLCanvasElement>(
-    document.getElementById("renderCanvas")
-  );
+  const canvas = document.getElementById("renderCanvas") as HTMLCanvasElement;
 
   // load the 3D engine
   var engine = new BABYLON.Engine(canvas, true);
@@ -14,10 +13,9 @@ window.addEventListener("DOMContentLoaded", function() {
     // create a basic BJS Scene object
     var scene = new BABYLON.Scene(engine);
 
-    // create a FreeCamera, and set its position to (x:0, y:5, z:-10)
-    var camera = new BABYLON.FreeCamera(
+    var camera = new BABYLON.FlyCamera(
       "camera1",
-      new BABYLON.Vector3(0, 5, -10),
+      new BABYLON.Vector3(0, 8, -25),
       scene
     );
 
@@ -29,19 +27,53 @@ window.addEventListener("DOMContentLoaded", function() {
 
     // create a basic light, aiming 0,1,0 - meaning, to the sky
     var light = new BABYLON.HemisphericLight(
-      "light1",
+      "light",
       new BABYLON.Vector3(0, 1, 0),
       scene
     );
 
+    BABYLON.SceneLoader.ImportMesh(
+      "",
+      "./assets/models/lighthouse/",
+      "Lighthouse.gltf",
+      scene,
+      function(scene) {}
+    );
+
+    BABYLON.SceneLoader.ImportMesh(
+      "",
+      "./assets/models/tugboat/",
+      "Tugboat.gltf",
+      scene,
+      function([boat]) {
+        boat.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
+        boat.position.x = -7;
+        boat.position.y = -1;
+      }
+    );
+
+    BABYLON.SceneLoader.ImportMesh(
+      "",
+      "./assets/models/tugboat/",
+      "Tugboat.gltf",
+      scene,
+      function([boat]) {
+        boat.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
+        boat.position.x = 2;
+        boat.position.y = -1;
+        boat.position.z = -7;
+        boat.rotate(BABYLON.Axis.Y, 2);
+      }
+    );
+
     // create a built-in "sphere" shape; its constructor takes 6 params: name, segment, diameter, scene, updatable, sideOrientation
-    var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
+    // var sphere = BABYLON.Mesh.CreateSphere("sphere1", 16, 2, scene);
 
-    // move the sphere upward 1/2 of its height
-    sphere.position.y = 1;
+    // // move the sphere upward 1/2 of its height
+    // sphere.position.y = 1;
 
-    // create a built-in "ground" shape;
-    var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+    // // create a built-in "ground" shape;
+    // var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
 
     // return the created scene
     return scene;
